@@ -220,12 +220,19 @@ window.closeBottomSheet = function(skipCallback = false) {
   
   if(!modal || !container) return;
   
-  // Trượt xuống
+  // 1. Chặn tương tác NGAY LẬP TỨC để nhường quyền chạm (touch) cho App bên dưới
+  modal.classList.add('pointer-events-none');
+  
+  // 2. Xóa inline style phòng trường hợp bị kẹt từ thao tác vuốt (swipe) trước đó
+  container.style.transform = '';
+  container.style.transition = '';
+  
+  // 3. Trượt xuống
   container.classList.add('translate-y-full');
   
-  // Ẩn modal
+  // 4. Ẩn modal và dọn dẹp
   setTimeout(() => {
-    modal.classList.add('pointer-events-none', 'opacity-0');
+    modal.classList.add('opacity-0');
     document.getElementById('bs-content').innerHTML = ""; // Clear mem
     
     if(!skipCallback && typeof window._currentBsCloseCallback === 'function') {
@@ -278,3 +285,36 @@ window.addEventListener("DOMContentLoaded", () => {
       }, {passive: true});
   }
 });
+
+// Fix đơ màn
+      header.addEventListener('touchstart', (e) => {
+          startY = e.touches[0].clientY;
+          currentY = startY; // Sửa lỗi: Đặt lại currentY để không bị kẹt tọa độ cũ
+          isDragging = true;
+          container.style.transition = 'none';
+      }, {passive: true});
+
+      header.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          currentY = e.touches[0].clientY;
+          let diff = currentY - startY;
+          if (diff > 0) {
+              container.style.transform = `translateY(${diff}px)`;
+          }
+      }, {passive: true});
+
+      header.addEventListener('touchend', (e) => {
+          if (!isDragging) return;
+          isDragging = false;
+          container.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+          let diff = currentY - startY;
+          if (diff > 100) {
+              window.closeBottomSheet();
+          } else {
+              container.style.transform = 'translateY(0)';
+              // Gỡ bỏ inline style sau khi nhả tay để trả lại quyền điều khiển cho class
+              setTimeout(() => {
+                  if (!isDragging) container.style.transform = '';
+              }, 400);
+          }
+      }, {passive: true});
