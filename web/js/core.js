@@ -89,15 +89,19 @@ function applyTheme(isDark) {
     document.body.classList.remove("dark-mode");
   }
 
-  const textSun = document.getElementById("text-sun");
-  const textMoon = document.getElementById("text-moon");
-  if (textSun && textMoon) {
+  const iconSun = document.getElementById("icon-sun");
+  const iconMoon = document.getElementById("icon-moon");
+  if (iconSun && iconMoon) {
     if (isDark) {
-      textSun.classList.remove("hidden");
-      textMoon.classList.add("hidden");
+      iconMoon.classList.add("hidden");
+      iconMoon.classList.add("scale-50", "-rotate-90");
+      iconSun.classList.remove("hidden");
+      setTimeout(() => iconSun.classList.remove("scale-50", "rotate-90"), 50);
     } else {
-      textSun.classList.add("hidden");
-      textMoon.classList.remove("hidden");
+      iconSun.classList.add("hidden");
+      iconSun.classList.add("scale-50", "rotate-90");
+      iconMoon.classList.remove("hidden");
+      setTimeout(() => iconMoon.classList.remove("scale-50", "-rotate-90"), 50);
     }
   }
 }
@@ -179,3 +183,98 @@ function initGlobalStars() {
   }
   document.body.appendChild(starContainer);
 }
+
+// =========================================
+// GLOBAL BOTTOM SHEET MODAL (POSTS VIEW)
+// =========================================
+window.openBottomSheet = function(titleHtml, contentHtml, onOpenCallback, onCloseCallback) {
+  const modal = document.getElementById('global-bottom-sheet');
+  const container = document.getElementById('bs-container');
+  const title = document.getElementById('bs-title');
+  const content = document.getElementById('bs-content');
+  
+  if(!modal || !container) return;
+  
+  title.innerHTML = titleHtml;
+  content.innerHTML = contentHtml;
+  
+  // Hiển thị modal
+  modal.classList.remove('pointer-events-none', 'opacity-0');
+  
+  // Trượt lên
+  setTimeout(() => {
+    container.classList.remove('translate-y-full');
+  }, 10);
+  
+  // Callback when open
+  if (typeof onOpenCallback === 'function') {
+      setTimeout(onOpenCallback, 300);
+  }
+
+  window._currentBsCloseCallback = onCloseCallback;
+};
+
+window.closeBottomSheet = function(skipCallback = false) {
+  const modal = document.getElementById('global-bottom-sheet');
+  const container = document.getElementById('bs-container');
+  
+  if(!modal || !container) return;
+  
+  // Trượt xuống
+  container.classList.add('translate-y-full');
+  
+  // Ẩn modal
+  setTimeout(() => {
+    modal.classList.add('pointer-events-none', 'opacity-0');
+    document.getElementById('bs-content').innerHTML = ""; // Clear mem
+    
+    if(!skipCallback && typeof window._currentBsCloseCallback === 'function') {
+        window._currentBsCloseCallback();
+    }
+  }, 400); // Wait for transition
+};
+
+// Gắn sự kiện đóng bằng nút, backdrop, thoát bằng vuốt header
+window.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.getElementById('bs-close-btn');
+  const backdrop = document.getElementById('bs-backdrop');
+  const header = document.getElementById('bs-header');
+  
+  if (closeBtn) closeBtn.addEventListener('click', () => window.closeBottomSheet());
+  if (backdrop) backdrop.addEventListener('click', () => window.closeBottomSheet());
+  
+  // Xử lý vuốt màn hình
+  if (header) {
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+      const container = document.getElementById('bs-container');
+
+      header.addEventListener('touchstart', (e) => {
+          startY = e.touches[0].clientY;
+          isDragging = true;
+          container.style.transition = 'none';
+      }, {passive: true});
+
+      header.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          currentY = e.touches[0].clientY;
+          let diff = currentY - startY;
+          if (diff > 0) {
+              container.style.transform = `translateY(${diff}px)`;
+          }
+      }, {passive: true});
+
+      header.addEventListener('touchend', (e) => {
+          if (!isDragging) return;
+          isDragging = false;
+          container.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+          let diff = currentY - startY;
+          if (diff > 100) {
+              window.closeBottomSheet();
+          } else {
+              container.style.transform = 'translateY(0)';
+          }
+      }, {passive: true});
+  }
+});

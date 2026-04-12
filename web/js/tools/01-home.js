@@ -28,14 +28,14 @@ export function setupTool() {
   dashboardTools.forEach((tool, idx) => {
       // Logic Responsive: Để Card trông như App Native, dùng CSS Grid 2 cột trên rấp nhỏ và 3 cột trên ipad.
       gridCardsHTML += `
-      <button onclick="switchTab('${tool.id}')" class="glass-card flex flex-col items-start justify-between p-4 md:p-6 rounded-[1.2rem] md:rounded-[1.5rem] text-left transition transform focus:outline-none w-full appearance-none relative overflow-hidden group">
+      <button onclick="switchTab('${tool.id}')" class="glass-card flex flex-col items-start justify-between p-4 md:p-6 rounded-[1.2rem] md:rounded-[1.5rem] text-left transition-all duration-300 transform active:scale-[0.96] focus:outline-none w-full appearance-none relative overflow-hidden group">
           <div class="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent dark:from-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="mb-4">
-              <span class="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border transition-colors ${tool.class}">0${idx + 1}</span>
+          <div class="mb-4 relative z-10">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full text-[10px] font-black tracking-widest bg-slate-100 dark:bg-black/20 ${tool.class.split(' ')[2]} ${tool.class.split(' ')[3]} shadow-sm">0${idx + 1}</span>
           </div>
-          <div>
+          <div class="relative z-10">
               <h3 class="font-extrabold text-[14px] md:text-[16px] text-slate-800 dark:text-white leading-tight mb-1 transition-colors group-hover:text-orange-500 dark:group-hover:text-orange-400">${tool.name}</h3>
-              <p class="text-[10px] md:text-[11px] text-slate-500 dark:text-slate-400 leading-snug">${tool.desc}</p>
+              <p class="text-[10px] md:text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">${tool.desc}</p>
           </div>
       </button>`;
   });
@@ -131,19 +131,18 @@ export function setupTool() {
     manifest.forEach((guide, index) => {
       const item = document.createElement("div");
       item.id = `guide-item-${index}`;
-      item.className = "guide-item glass-card rounded-[1.2rem] overflow-hidden border border-black/5 dark:border-white/5 transition-all duration-300";
+      item.className = "guide-item glass-card rounded-[1.2rem] overflow-hidden border border-black/5 dark:border-white/5 transition-all duration-300 transform active:scale-[0.98]";
 
       item.innerHTML = `
                 <button class="w-full text-left px-4 py-4 md:px-5 md:py-5 flex items-center justify-between focus:outline-none group" onclick="toggleGuide(${index})">
-                    <div class="pr-2">
+                    <div class="pr-3 flex-1">
                         <h3 class="font-bold text-slate-800 dark:text-white group-hover:text-orange-500 transition text-[14px] md:text-[15px] leading-snug">${guide.title}</h3>
-                        <p class="inline-block mt-1 bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded text-[9px] uppercase font-bold tracking-widest transition-colors">${guide.date}</p>
+                        <p class="inline-block mt-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded text-[9px] uppercase font-bold tracking-widest transition-colors">${guide.date}</p>
                     </div>
-                    <div id="icon-${index}" class="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-slate-100/50 dark:bg-white/5 rounded-full group-hover:bg-orange-500/20 group-hover:text-orange-600 shrink-0 transition-colors">ĐỌC</div>
+                    <div class="text-slate-300 dark:text-slate-600 group-hover:text-orange-500 transition-colors shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m9 18 6-6-6-6"/></svg>
+                    </div>
                 </button>
-                <div id="content-${index}" class="hidden border-t border-black/5 dark:border-white/5 transition-colors duration-300">
-                    <div class="prose-custom max-w-none px-4 py-5 md:px-6 md:py-6 text-[14px] md:text-[15px] leading-relaxed" id="md-render-${index}"></div>
-                </div>
             `;
       guideList.appendChild(item);
     });
@@ -168,84 +167,59 @@ export function setupTool() {
   });
 
   // ==========================================
-  // 5. MỞ BÀI VIẾT (Markdown Renderer)
+  // 5. MỞ BÀI VIẾT BẰNG BOTTOM SHEET
   // ==========================================
   window.toggleGuide = async function (index, skipUrlUpdate = false) {
-    const contentDiv = document.getElementById("content-" + index);
-    const iconDiv = document.getElementById("icon-" + index);
-    const renderDiv = document.getElementById("md-render-" + index);
-    const parentItem = document.getElementById("guide-item-" + index);
-    const currentSlug = manifest[index].path.split("/").pop().replace(".md", "");
+    const guideItem = manifest[index];
+    const currentSlug = guideItem.path.split("/").pop().replace(".md", "");
 
-    manifest.forEach((_, i) => {
-      if (i !== index) {
-        const otherContent = document.getElementById("content-" + i);
-        const otherIcon = document.getElementById("icon-" + i);
-        if (otherContent && !otherContent.classList.contains("hidden")) {
-          otherContent.classList.add("hidden");
-          otherIcon.innerText = "ĐỌC";
-          otherIcon.classList.remove("bg-orange-500/20", "text-orange-600");
-          otherIcon.classList.add("bg-slate-100/50", "text-slate-400");
+    if (!skipUrlUpdate) {
+      const newUrl = new URL(window.location);
+      newUrl.searchParams.set("post", currentSlug);
+      window.history.replaceState(null, null, newUrl);
+    }
+
+    const titleHtml = guideItem.title;
+    const loadingHtml = '<div class="text-orange-500 font-bold animate-pulse text-center py-10 text-[12px] uppercase">Đang tải nội dung...</div>';
+    
+    // Mở Bottom Sheet trước với Skeleton/Loading
+    if(window.openBottomSheet) {
+        window.openBottomSheet(titleHtml, loadingHtml, null, () => {
+            // Khi close modal thì xóa URL param
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.delete("post");
+            window.history.replaceState(null, null, newUrl);
+        });
+    }
+
+    if (!cachedContent[index]) {
+      try {
+        const response = await fetch(manifest[index].path);
+        if (!response.ok) throw new Error("File error");
+        let text = await response.text();
+
+        if (window.marked) {
+           text = text.replace(/^@time\[(.*?)\] (.*)$/gm, '<div class="md-timeline-node"><span class="md-time-badge">$1</span><div class="md-time-text">$2</div></div>');
+           cachedContent[index] = marked.parse(text);
+        } else {
+           cachedContent[index] = "<p class='text-red-500 text-center py-4'>Lỗi thư viện Markdown.</p>";
         }
-      }
-    });
-
-    if (contentDiv.classList.contains("hidden")) {
-      contentDiv.classList.remove("hidden");
-      iconDiv.innerText = "ĐÓNG";
-      iconDiv.classList.remove("bg-slate-100/50", "text-slate-400");
-      iconDiv.classList.add("bg-orange-500/20", "text-orange-600");
-
-      if (!skipUrlUpdate) {
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.set("post", currentSlug);
-        window.history.replaceState(null, null, newUrl);
-      }
-
-      if (!cachedContent[index]) {
-        renderDiv.innerHTML = '<div class="text-orange-500 font-bold animate-pulse text-center py-6 text-[12px] uppercase">Đang nạp dữ liệu...</div>';
-        try {
-          const response = await fetch(manifest[index].path);
-          if (!response.ok) throw new Error("File error");
-          let text = await response.text();
-
-          if (window.marked) {
-             text = text.replace(/^@time\[(.*?)\] (.*)$/gm, '<div class="md-timeline-node"><span class="md-time-badge">$1</span><div class="md-time-text">$2</div></div>');
-             cachedContent[index] = marked.parse(text);
-          } else {
-             cachedContent[index] = "<p class='text-red-500 text-center py-4'>Lỗi thư viện Markdown.</p>";
-          }
-        } catch (error) {
-          cachedContent[index] = `<div class="text-red-500 bg-red-50 p-4 text-[12px] text-center rounded-xl my-4 font-bold uppercase">Không tải được file</div>`;
-        }
-      }
-
-      renderDiv.innerHTML = cachedContent[index];
-      renderDiv.querySelectorAll("a").forEach((link) => {
-        link.setAttribute("target", "_blank");
-        link.className = "text-orange-500 font-bold hover:underline";
-      });
-
-      // Scroll to view
-      setTimeout(() => {
-        if (parentItem && document.getElementById("app-container")) {
-          const container = document.getElementById("app-container");
-          const y = parentItem.offsetTop - 80; // Offset cho đẹp
-          container.scrollTo({ top: y, behavior: "smooth" });
-        }
-      }, 100);
-    } else {
-      contentDiv.classList.add("hidden");
-      iconDiv.innerText = "ĐỌC";
-      iconDiv.classList.remove("bg-orange-500/20", "text-orange-600");
-      iconDiv.classList.add("bg-slate-100/50", "text-slate-400");
-
-      if (!skipUrlUpdate) {
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.delete("post");
-        window.history.replaceState(null, null, newUrl);
+      } catch (error) {
+        cachedContent[index] = `<div class="text-red-500 bg-red-50 p-4 text-[12px] text-center rounded-xl my-4 font-bold uppercase">Không tải được file</div>`;
       }
     }
+
+    // Sau khi nạp xong, thay the nội dung trong modal
+    setTimeout(() => {
+        const bsContent = document.getElementById('bs-content');
+        if (bsContent) {
+            bsContent.innerHTML = `<div class="prose-custom max-w-none text-[15px] leading-relaxed pb-20">${cachedContent[index]}</div>`;
+            bsContent.querySelectorAll("a").forEach((link) => {
+                link.setAttribute("target", "_blank");
+                link.className = "text-orange-500 font-bold hover:underline";
+            });
+        }
+    }, 100);
   };
 
   const urlParams = new URLSearchParams(window.location.search);

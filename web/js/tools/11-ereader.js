@@ -224,14 +224,18 @@ export function setupTool() {
         
         <!-- HOME SCREEN -->
         <div class="ereader-home" id="er-home">
-            <h1 class="text-4xl font-black mb-4 tracking-tight" style="color: var(--er-text)">Web E-Reader</h1>
-            <p class="mb-8 opacity-70 text-center max-w-md" style="color: var(--er-text)">
-                Trình đọc sách chuyên nghiệp UX Kindle. <br>Hỗ trợ Đọc & Xóa (Không lưu rác hệ thống), định dạng EPUB, PDF, TXT.
+            <h1 class="text-[32px] md:text-[44px] font-black tracking-tighter leading-none mb-2" style="color: var(--er-text)">Web E-Reader</h1>
+            <p class="mb-4 opacity-60 text-center max-w-sm text-[12px] font-medium" style="color: var(--er-text)">
+                Trình đọc sách chuyên nghiệp UX Kindle. Hỗ trợ EPUB, PDF, TXT.
             </p>
-            <label>
-                <span class="er-primary-btn">MỞ TỆP SÁCH</span>
+            <label class="group relative cursor-pointer">
+                <span class="er-primary-btn bg-slate-800 dark:bg-white text-white dark:text-slate-900 group-active:scale-95 transition-transform flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+                    <span class="text-[14px]">MỞ TỆP SÁCH</span>
+                </span>
                 <input type="file" id="er-file-loader" class="er-file-input" accept=".epub,.pdf,.txt,.md,.html" />
             </label>
+            <div class="mt-8 text-center text-[10px] opacity-40 uppercase tracking-widest font-bold" style="color: var(--er-text)">Auto Memory Clearing (Nhẹ & Không Rác)</div>
         </div>
 
         <!-- READER SCREEN -->
@@ -253,11 +257,17 @@ export function setupTool() {
 
             <!-- Header -->
             <div class="er-header er-overlay" id="er-header">
-                <button class="er-icon-btn" id="btn-back">Đóng</button>
+                <button class="er-icon-btn group focus:outline-none" id="btn-back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-500 group-hover:text-orange-500 transition-colors"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
                 <div class="er-title" id="book-title">Tên sách</div>
                 <div style="display:flex; gap: 0.5rem">
-                    <button class="er-icon-btn" id="btn-toc">Mục lục</button>
-                    <button class="er-icon-btn" id="btn-settings">Cấu hình</button>
+                    <button class="er-icon-btn group focus:outline-none" id="btn-toc">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-500 group-hover:text-orange-500 transition-colors"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    </button>
+                    <button class="er-icon-btn group focus:outline-none" id="btn-settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-500 group-hover:text-orange-500 transition-colors"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+                    </button>
                 </div>
             </div>
 

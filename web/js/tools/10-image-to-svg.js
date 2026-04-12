@@ -347,7 +347,7 @@ export function setupTool() {
       if (!finalSvgString) return;
       navigator.clipboard.writeText(finalSvgString).then(() => {
         const oldText = btnCopy.innerText;
-        btnCopy.innerText = "✅ Đã Copy";
+        btnCopy.innerText = "ĐÃ COPY";
         btnCopy.classList.add(
           "bg-green-100",
           "text-green-600",

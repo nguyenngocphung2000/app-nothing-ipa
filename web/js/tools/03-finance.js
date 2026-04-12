@@ -10,7 +10,7 @@ export function setupTool() {
   panel.innerHTML = `
         <div class="text-center mb-6">
             <span class="bg-cyan-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Tài chính</span>
-            <h2 class="text-3xl font-bold mt-2 text-gray-800">Tính Lãi <span class="text-cyan-500">Ngân Hàng</span> 💰</h2>
+            <h2 class="text-3xl font-bold mt-2 text-gray-800">Tính Lãi <span class="text-cyan-500">Ngân Hàng</span></h2>
             <p class="text-sm text-gray-500 mt-2 italic">Tính toán chi tiết lãi gửi tiết kiệm và khoản vay.</p>
         </div>
 
@@ -86,8 +86,9 @@ export function setupTool() {
                     </div>
                 </div>
 
-                <div id="loan-warning" class="hidden mt-3 text-xs bg-orange-100 text-orange-700 p-3 rounded-xl border border-orange-200 font-medium">
-                    ⚠️ <b>Cảnh báo:</b> Lãi suất trên dư nợ ban đầu thực chất tương đương với khoảng <b id="loan-real-rate">...</b>%/năm nếu tính theo dư nợ giảm dần. Đừng để con số biểu kiến đánh lừa bạn!
+                <div id="loan-warning" class="hidden mt-3 text-xs bg-orange-100 text-orange-700 p-3 rounded-xl border border-orange-200 font-medium flex gap-2 items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-0.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span><b>Cảnh báo:</b> Lãi suất trên dư nợ ban đầu thực chất tương đương với khoảng <b id="loan-real-rate">...</b>%/năm nếu tính theo dư nợ giảm dần. Đừng để con số biểu kiến đánh lừa bạn!</span>
                 </div>
                 
                 <button id="btn-calc-loan" class="w-full mt-6 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-3 rounded-xl transition shadow-md active:scale-95">TÍNH TOÁN KHOẢN VAY</button>
@@ -108,7 +109,10 @@ export function setupTool() {
                 </div>
 
                 <div id="loan-schedule-container" class="mt-6 hidden">
-                    <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-2"><span>📅</span> Lịch trả nợ chi tiết</h4>
+                    <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Lịch trả nợ chi tiết
+                    </h4>
                     <div class="overflow-x-auto max-h-80 custom-scrollbar rounded-xl border border-gray-100 shadow-inner">
                         <table class="w-full text-sm text-left">
                             <thead class="bg-gray-50 text-gray-500 sticky top-0 text-xs uppercase">
@@ -127,9 +131,12 @@ export function setupTool() {
                 </div>
             </div>
 
-            <div class="bg-cyan-50/50 p-4 rounded-2xl border border-cyan-100 text-xs text-gray-600 leading-relaxed font-medium">
-                <span class="font-bold text-cyan-700">💡 Mẹo Tài Chính:</span> Sự khác biệt lớn nhất khi vay là phương pháp tính lãi. 
-                Vay 100 triệu, 10%/năm trong 12 tháng: Nếu tính theo <b class="text-green-600">Dư nợ giảm dần</b>, tiền lãi mỗi tháng sẽ ít dần đi vì gốc đã giảm. Nhưng nếu tính theo <b class="text-red-500">Dư nợ ban đầu (Flat rate)</b>, tháng nào bạn cũng phải đóng nguyên tiền lãi của 100 triệu dù gốc đã trả gần hết.
+            <div class="bg-cyan-50/50 p-4 rounded-2xl border border-cyan-100 text-xs text-gray-600 leading-relaxed font-medium flex gap-3 items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-cyan-500 mt-1"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <div>
+                    <span class="font-bold text-cyan-700">Mẹo Tài Chính:</span> Sự khác biệt lớn nhất khi vay là phương pháp tính lãi. 
+                    Vay 100 triệu, 10%/năm trong 12 tháng: Nếu tính theo <b class="text-green-600">Dư nợ giảm dần</b>, tiền lãi mỗi tháng sẽ ít dần đi vì gốc đã giảm. Nhưng nếu tính theo <b class="text-red-500">Dư nợ ban đầu (Flat rate)</b>, tháng nào bạn cũng phải đóng nguyên tiền lãi của 100 triệu dù gốc đã trả gần hết.
+                </div>
             </div>
 
         </div>

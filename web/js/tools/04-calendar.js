@@ -16,7 +16,7 @@ export function setupTool() {
     '<h2 class="text-3xl font-bold mt-2 text-slate-800">Lịch <span class="text-orange-500">Vạn Niên</span></h2>' +
     '<p class="text-sm text-gray-500 mt-2 italic">Tìm ngày âm dương, đắc đạo thành thánh!</p>' +
     "</div>" +
-    '<div id="cal-loading" class="text-center py-10 text-slate-400 font-bold animate-pulse">Đang kết nối dữ liệu Thiên Văn... ⏳</div>' +
+    '<div id="cal-loading" class="text-center py-10 text-slate-400 font-bold flex flex-col items-center justify-center gap-3"><svg class="animate-spin w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Đang kết nối dữ liệu Thiên Văn...</div>' +
     // BỌC GIAO DIỆN CHÍNH: Hỗ trợ 2 cột trên màn hình ngang
     '<div id="cal-widget" class="hidden max-w-5xl mx-auto pb-10 px-2 lg:px-4">' +
     '<div class="flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8">' +
@@ -41,7 +41,7 @@ export function setupTool() {
     "</div></div></div>" +
     // THẺ THÔNG ĐIỆP NGÀY HÔM NAY NẰM Ở CỘT TRÁI
     '<div class="bg-white/90 backdrop-blur-md p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col">' +
-    '<h3 class="text-[10px] font-bold text-teal-600 uppercase tracking-widest flex items-center gap-2 mb-3 pb-2 border-b border-slate-50"><span>💌</span> Thông điệp ngày hôm nay</h3>' +
+    '<h3 class="text-[10px] font-bold text-teal-600 uppercase tracking-widest flex items-center gap-2 mb-3 pb-2 border-b border-slate-50"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"/><path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"/></svg> Thông điệp ngày hôm nay</h3>' +
     '<div id="res-quote-text" class="text-[13.5px] text-slate-600 font-medium italic leading-relaxed text-justify">Đang kết nối...</div>' +
     '<div id="res-quote-author" class="text-right text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-wider"></div>' +
     "</div>" +
@@ -61,7 +61,9 @@ export function setupTool() {
     '<span class="text-slate-300 font-black mt-4">/</span>' +
     '<div class="flex-1"><label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block text-center">Năm</label><select id="sel-y" style="text-align-last: center; direction: ltr;" class="w-full bg-slate-50 border border-slate-200 rounded-xl text-center font-bold text-slate-700 py-3 outline-none focus:ring-2 ring-orange-200 appearance-none cursor-pointer"></select></div>' +
     "</div>" +
-    '<button id="btn-lookup" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95 flex justify-center items-center gap-2 text-sm mt-1">🔍 TÌM NGÀY</button>' +
+    '<button id="btn-lookup" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95 flex justify-center items-center gap-2 text-sm mt-1">' +
+    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>' +
+    'TÌM NGÀY</button>' +
     "</div>" +
     "</div>" + // KẾT THÚC CỘT TRÁI
     // ================= CỘT PHẢI (LỊCH THÁNG & LỄ HỘI) =================
@@ -85,7 +87,7 @@ export function setupTool() {
     '<div id="cal-grid" class="grid grid-cols-7 gap-1 text-center"></div>' +
     "</div>" +
     '<div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm">' +
-    '<h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-3 pb-2 border-b border-slate-50"><span>🇻🇳</span> Sự Kiện & Lễ Hội Việt Nam</h3>' +
+    '<h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-3 pb-2 border-b border-slate-50"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Sự Kiện & Lễ Hội Việt Nam</h3>' +
     '<div id="res-events" class="space-y-2 mt-2"></div>' +
     "</div>" +
     "</div>" + // KẾT THÚC CỘT PHẢI
@@ -548,7 +550,7 @@ export function setupTool() {
       } else {
         todaysEvents.forEach(function (e) {
           evContainer.innerHTML +=
-            '<div class="bg-slate-50 p-3 rounded-xl flex gap-3 items-start border border-slate-100 shadow-sm"><span class="text-orange-500 mt-0.5">📌</span><span class="font-bold text-slate-700 text-xs leading-relaxed">' +
+            '<div class="bg-slate-50 p-3 rounded-xl flex gap-3 items-start border border-slate-100 shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-orange-500 mt-1 shrink-0"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg><span class="font-bold text-slate-700 text-xs leading-relaxed">' +
             e +
             "</span></div>";
         });

@@ -19,8 +19,17 @@ html, body {
     overflow: hidden; /* Cố định Body để khóa màng hình ngoài */
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
     font-family: 'Lexend', sans-serif; 
     transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
+}
+
+/* Cho phép bôi đen trong vùng nội dung bài viết và input */
+input, textarea, .prose-custom, .allow-select {
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 body { 
@@ -116,6 +125,11 @@ body.dark-mode .glass-border-bottom {
 @keyframes homeFadeIn {
     0% { opacity: 0; transform: scale(1.02); }
     100% { opacity: 1; transform: scale(1); }
+}
+
+/* Modal Bottom Sheet */
+.cubic-bezier-out {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ----------------------------------------------------
