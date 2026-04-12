@@ -230,7 +230,7 @@ export function setupTool() {
     }
   });
 
-  // --- LOGIC XUẤT CODE + CHÈN MINI CONSOLE ---
+  // --- LOGIC XUẤT CODE + CHÈN MINI CONSOLE (ĐÃ SỬA CHO IOS) ---
   runBtn.addEventListener("click", function () {
     const code = codeInput.value;
     if (!code.trim()) {
@@ -312,12 +312,61 @@ export function setupTool() {
             </div>
         `;
 
-    const fullHTML =
-      prependConsoleLogic + code + appendConsoleUI + orangeLogoWatermark;
+    const fullHTML = prependConsoleLogic + code + appendConsoleUI + orangeLogoWatermark;
+    
+    // TẠO GIAO DIỆN PREVIEW TRỰC TIẾP TRÊN APP THAY VÌ MỞ TAB MỚI
+    let oldOverlay = document.getElementById('cb-preview-overlay');
+    if(oldOverlay) oldOverlay.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'cb-preview-overlay';
+    
+    // CSS Khung Overlay vuốt lên từ dưới
+    overlay.style.cssText = 'position: fixed; inset: 0; z-index: 100000; background: #ffffff; display: flex; flex-direction: column; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);';
+
+    // Thêm style animation nội tuyến
+    const style = document.createElement('style');
+    style.innerHTML = '@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } } @keyframes slideDown { from { transform: translateY(0); } to { transform: translateY(100%); } }';
+    overlay.appendChild(style);
+
+    // Thanh Header của Preview
+    const header = document.createElement('div');
+    const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
+    
+    header.style.cssText = `height: 55px; border-bottom: 1px solid ${isDark ? '#27272a' : '#e2e8f0'}; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; flex-shrink: 0; background: ${isDark ? '#09090b' : '#f8fafc'};`;
+    
+    header.innerHTML = `
+        <div style="font-weight: 800; font-size: 13px; text-transform: uppercase; color: #3b82f6; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            KẾT QUẢ HIỂN THỊ
+        </div>
+        <button id="cb-close-preview" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; padding: 6px 14px; border-radius: 99px; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 4px; cursor: pointer;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Đóng
+        </button>
+    `;
+
+    // Nhúng mã vào iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'flex: 1; width: 100%; border: none; background: #ffffff;';
+    
+    // Dùng Blob an toàn nhúng vào iframe thay vì mở cửa sổ mới
     const blob = new Blob([fullHTML], { type: "text/html;charset=utf-8" });
     const blobUrl = URL.createObjectURL(blob);
+    iframe.src = blobUrl;
 
-    window.open(blobUrl, "_blank");
+    overlay.appendChild(header);
+    overlay.appendChild(iframe);
+    document.body.appendChild(overlay);
+
+    // Sự kiện đóng Preview
+    header.querySelector('#cb-close-preview').addEventListener('click', () => {
+        overlay.style.animation = 'slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+        setTimeout(() => {
+            overlay.remove();
+            URL.revokeObjectURL(blobUrl); // Dọn dẹp RAM
+        }, 300);
+    });
   });
 
   codeInput.value = `<!DOCTYPE html>

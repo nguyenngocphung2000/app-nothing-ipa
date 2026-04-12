@@ -32,25 +32,32 @@ export function setupTool() {
             --er-primary: #5f4b32;
         }
   
+        /* SỬA LỖI LAYOUT: Dùng flexbox lấp đầy toàn màn hình thay vì fixed */
+        .ereader-app {
+            position: relative;
+            width: 100%;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: var(--er-bg);
+        }
+  
         .ereader-home {
-            min-height: 70vh;
+            flex: 1; /* Tự động phình to lấp đầy khoảng trống */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: var(--er-bg);
             color: var(--er-text);
             transition: background 0.3s, color 0.3s;
-            border-radius: 1.5rem;
             padding: 2rem;
         }
   
         .ereader-reader {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            flex: 1; /* Khi hiển thị sẽ chiếm trọn không gian */
+            position: relative; /* Flow bình thường, không bao giờ bị sụp layout */
             background: var(--er-bg);
             color: var(--er-text);
-            z-index: 99999;
             display: none;
             flex-direction: column;
             overflow: hidden;
@@ -101,7 +108,6 @@ export function setupTool() {
         .er-zone-center { flex: 1; }
         .er-zone-right { flex: 0 0 25%; }
   
-        /* SỬA LỖI HIỂN THỊ: Đổi display flex thành block để WebKit không nuốt mất chữ */
         .er-mount {
             position: absolute;
             inset: 0;
@@ -199,7 +205,7 @@ export function setupTool() {
         .er-progress-fill { width: 0%; height: 100%; background: var(--er-primary); transition: width 0.3s; }
         
         #er-loading {
-            position: fixed; inset: 0; background: var(--er-bg); z-index: 100000;
+            position: absolute; inset: 0; background: var(--er-bg); z-index: 100000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
             color: var(--er-text);
         }
@@ -228,7 +234,7 @@ export function setupTool() {
   
           <div class="ereader-reader" id="er-reader">
               
-              <div class="er-mount mode-paginated" id="er-mount">
+              <div class="er-mount mode-paginate" id="er-mount">
                   <div id="er-text-content" style="display:none;"></div>
                   <div id="er-epub-view" style="display:none;"></div>
                   <div id="er-pdf-view" style="display:none;"></div>
@@ -384,7 +390,6 @@ export function setupTool() {
     let pdfCurrentPage = 1;
     let textCurrentScroll = 0; 
   
-    // Tải script an toàn, kiểm tra trên window object
     function loadExternalScripts(cb) {
         if (window.ePub && window.pdfjsLib && window.JSZip) {
             return cb();
@@ -501,9 +506,6 @@ export function setupTool() {
         }
     }
   
-    // ==========================================
-    // KIẾN TRÚC MỚI: CHỐNG LỖI MẤT QUYỀN TRUY CẬP FILE TRÊN IOS
-    // ==========================================
     fileLoader.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -512,7 +514,6 @@ export function setupTool() {
         titleText.innerText = currentFile.substring(0, 30);
         let ext = file.name.split('.').pop().toLowerCase();
         
-        // Chuẩn bị giao diện
         homeScreen.style.display = "none";
         readerScreen.classList.add("active");
         document.body.style.overflow = "hidden"; 
@@ -524,12 +525,10 @@ export function setupTool() {
         applySettings();
         
         loadingDisplay.style.display = "flex";
-        loadingText.innerHTML = "Đang hút dữ liệu vào RAM...<br><small class='opacity-50'>Chống lỗi thất thoát file iOS</small>";
+        loadingText.innerHTML = "Đang xử lý nội dung...<br><small class='opacity-50'>Chống lỗi thất thoát file iOS</small>";
 
         e.target.value = "";
   
-        // BẮT BUỘC SỬ DỤNG FILEREADER ĐỂ ĐỌC FILE NGAY LẬP TỨC
-        // Nếu dùng setTimeout ở đây, iOS sẽ cắt quyền truy cập File Object.
         const reader = new FileReader();
 
         reader.onerror = () => {
@@ -539,8 +538,6 @@ export function setupTool() {
 
         reader.onload = (event) => {
             const fileData = event.target.result;
-            
-            // Dữ liệu đã nằm gọn trong RAM, bây giờ tha hồ gọi thư viện xử lý
             loadingText.innerHTML = "Đang dựng trang sách...<br><small class='opacity-50'>Xin đợi một chút</small>";
 
             loadExternalScripts(() => {
@@ -566,7 +563,6 @@ export function setupTool() {
             });
         };
 
-        // Kích hoạt việc hút file vào RAM
         if (ext === 'txt' || ext === 'md' || ext === 'html') {
             reader.readAsText(file);
         } else {
@@ -574,9 +570,6 @@ export function setupTool() {
         }
     });
   
-    // ==========================================
-    // CÁC HÀM XỬ LÝ SAU KHI ĐÃ CÓ DỮ LIỆU
-    // ==========================================
     function renderEpubData(arrayBuffer) {
         epubView.style.display = "block";
         epubBook = window.ePub(arrayBuffer);
@@ -636,7 +629,6 @@ export function setupTool() {
   
     async function renderPdfData(arrayBuffer) {
         pdfView.style.display = "flex";
-        // Convert array buffer qua Uint8Array - Rất quan trọng để PDF.js không bị treo trên iOS
         let typedArray = new Uint8Array(arrayBuffer);
         
         try {
