@@ -25,7 +25,10 @@ jobs:
 
       - name: Sync Capacitor iOS
         working-directory: app
-        run: npx cap sync ios
+        run: |
+          chmod -R 755 node_modules/.bin/
+          chmod -R 755 node_modules/@capacitor/cli/bin/ || true
+          npx cap sync ios
 
       - name: Fix script permissions
         run: chmod -R +x app/ios/App/Pods/ || true && chmod -R +x app/ios/App/App/ || true
