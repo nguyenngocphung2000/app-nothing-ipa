@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NOTHING</title>
+    
+    <link rel="stylesheet" href="css/lexend/index.css">
+    
+  <script src="js/tailwindcss.js"></script>
+
+
+    <script src="js/marked.min.js" defer></script>
+    
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/png" href="favicon.svg">
+
+<link rel="apple-touch-icon-precomposed" href="favicon.svg">
+
+</head>
+<body class="text-gray-800 pb-20">
+
+    <header class="sticky top-0 z-[100] bg-transparent border-none transition-all duration-300" id="main-header">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between relative">
+            
+            <div id="main-logo-wrapper" class="flex items-center space-x-2 cursor-pointer logo-wrapper" onclick="switchTab('tab-home')" title="Về Trang Chủ">
+                <div class="bg-orange-500 text-white px-3 py-1 rounded-lg font-bold shadow-sm hover:bg-orange-600 transition">NOTHING</div>
+                <span class="font-bold text-gray-500 uppercase text-[10px] tracking-widest mt-1">YET EVERYTHING</span>
+            </div>
+            
+            <nav id="desktop-nav" class="hidden"></nav>
+
+            <div class="flex items-center gap-3 z-50">
+                <button onclick="toggleDarkMode()" class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-500 hover:bg-orange-100 hover:text-orange-500 transition shadow-inner font-bold text-[11px] uppercase tracking-wider" id="dark-mode-btn" title="Giao diện Tối/Sáng">
+                    <span id="text-sun" class="hidden">SÁNG</span>
+                    <span id="text-moon" class="">TỐI</span>
+                </button>
+
+                <button id="mobile-menu-btn" class="px-4 py-1.5 text-gray-600 hover:text-orange-500 focus:outline-none bg-white/50 rounded-full backdrop-blur-sm shadow-sm border border-gray-100 transition active:scale-95 font-bold text-[11px] uppercase tracking-wider">
+                    MENU
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden bg-white/95 backdrop-blur-xl border border-orange-100 absolute right-4 top-[calc(100%+0.5rem)] w-56 rounded-[1.5rem] shadow-2xl overflow-hidden z-50">
+            <div id="mobile-nav" class="flex flex-col py-3"></div>
+        </div>
+    </header>
+
+<main id="app-container" class="w-full mx-auto mt-8"></main>
+
+    <script type="module" src="js/core.js"></script>
+</body>
+</html>
