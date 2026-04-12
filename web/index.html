@@ -6,49 +6,42 @@
     <title>NOTHING</title>
     
     <link rel="stylesheet" href="css/lexend/index.css">
-    
-  <script src="js/tailwindcss.js"></script>
-
-
+    <script src="js/tailwindcss.js"></script>
     <script src="js/marked.min.js" defer></script>
     
-<link rel="stylesheet" href="css/style.css">
-<link rel="icon" type="image/png" href="favicon.svg">
-
-<link rel="apple-touch-icon-precomposed" href="favicon.svg">
-
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="favicon.svg">
+    <link rel="apple-touch-icon-precomposed" href="favicon.svg">
 </head>
-<body class="text-gray-800 pb-20">
+<body class="text-slate-800 transition-colors duration-500 overflow-hidden bg-slate-50 relative pointer-events-none">
+    
+    <!-- THANH ĐIỀU HƯỚNG NATIVE APP (Sẽ ẩn ở Home, hiện ở Tool) -->
+    <div id="native-app-bar" class="fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 transform -translate-y-full opacity-0 pointer-events-none pb-2 pt-[calc(env(safe-area-inset-top)+10px)] backdrop-blur-2xl glass-border-bottom">
+        <div class="max-w-[1600px] mx-auto px-4 flex items-center justify-between pointer-events-auto">
+            <button id="btn-back-home" class="flex items-center gap-1.5 focus:outline-none transition active:scale-95 group">
+                <!-- Mũi tên Typographic siêu gọn -->
+                <span class="text-2xl font-light text-slate-400 group-hover:text-orange-500 transition-colors -mt-0.5">&lsaquo;</span>
+                <span class="font-bold text-[10px] md:text-[11px] uppercase tracking-widest text-slate-500 group-hover:text-orange-500 transition-colors">Trang Chủ</span>
+            </button>
 
-    <header class="sticky top-0 z-[100] bg-transparent border-none transition-all duration-300" id="main-header">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between relative">
-            
-            <div id="main-logo-wrapper" class="flex items-center space-x-2 cursor-pointer logo-wrapper" onclick="switchTab('tab-home')" title="Về Trang Chủ">
-                <div class="bg-orange-500 text-white px-3 py-1 rounded-lg font-bold shadow-sm hover:bg-orange-600 transition">NOTHING</div>
-                <span class="font-bold text-gray-500 uppercase text-[10px] tracking-widest mt-1">YET EVERYTHING</span>
-            </div>
-            
-            <nav id="desktop-nav" class="hidden"></nav>
+            <!-- Tên Tool hiển thị động (Tuỳ chọn hiển thị thêm sau này) -->
+            <span id="current-tool-name" class="absolute left-1/2 -translate-x-1/2 font-extrabold text-[12px] uppercase text-slate-700 tracking-wider hidden sm:block opacity-0 transition-opacity">N/A</span>
 
-            <div class="flex items-center gap-3 z-50">
-                <button onclick="toggleDarkMode()" class="px-4 py-1.5 rounded-full bg-slate-100 text-slate-500 hover:bg-orange-100 hover:text-orange-500 transition shadow-inner font-bold text-[11px] uppercase tracking-wider" id="dark-mode-btn" title="Giao diện Tối/Sáng">
-                    <span id="text-sun" class="hidden">SÁNG</span>
-                    <span id="text-moon" class="">TỐI</span>
-                </button>
-
-                <button id="mobile-menu-btn" class="px-4 py-1.5 text-gray-600 hover:text-orange-500 focus:outline-none bg-white/50 rounded-full backdrop-blur-sm shadow-sm border border-gray-100 transition active:scale-95 font-bold text-[11px] uppercase tracking-wider">
-                    MENU
-                </button>
-            </div>
+            <button onclick="toggleDarkMode()" class="px-3 md:px-4 py-1.5 rounded-full bg-black/5 dark:bg-white/10 text-slate-500 dark:text-slate-300 hover:text-orange-500 transition border border-black/5 dark:border-white/10 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] relative overflow-hidden" id="dark-mode-btn" title="Giao diện Tối/Sáng">
+                <span id="text-sun" class="hidden">SÁNG</span>
+                <span id="text-moon" class="">TỐI</span>
+            </button>
         </div>
+    </div>
 
-        <div id="mobile-menu" class="hidden bg-white/95 backdrop-blur-xl border border-orange-100 absolute right-4 top-[calc(100%+0.5rem)] w-56 rounded-[1.5rem] shadow-2xl overflow-hidden z-50">
-            <div id="mobile-nav" class="flex flex-col py-3"></div>
-        </div>
-    </header>
-
-<main id="app-container" class="w-full mx-auto mt-8"></main>
+    <!-- KHUNG CHỨA TOÀN BỘ ỨNG DỤNG -->
+    <main id="app-container" class="w-full h-[100dvh] overflow-y-auto overflow-x-hidden custom-scrollbar pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pointer-events-auto">
+        <!-- Các nội dung sẽ được JS Đổ vào đây -->
+    </main>
 
     <script type="module" src="js/core.js"></script>
+    
+    <!-- Loại bỏ lỗi Flash Screen lúc load: bật pointer-events lại -->
+    <script> document.body.classList.remove("pointer-events-none"); </script>
 </body>
 </html>

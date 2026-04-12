@@ -1,185 +1,117 @@
 /* ==========================================================
-   NOTHING YET EVERYTHING - TOÀN DIỆN & KHOA HỌC
+   NOTHING YET EVERYTHING - APP NATIVE CAO CẤP (GLASS OS)
 ========================================================== */
 
 /* ----------------------------------------------------
    1. CẤU HÌNH CỐT LÕI (CORE BASE)
 ---------------------------------------------------- */
 html, body {
-    max-width: 100vw;
-    overflow-x: clip; 
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden; /* Cố định Body để khóa màng hình ngoài */
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    font-family: 'Lexend', sans-serif; 
+    transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
 }
 
 body { 
-    font-family: 'Lexend', sans-serif; 
-    background: radial-gradient(circle at top right, #fff4e6, #ffffff 70%); 
-    min-height: 100vh; 
-    transition: background-color 0.4s ease, color 0.4s ease;
+    background: radial-gradient(120% 120% at 50% -20%, #fff7ed, #f8fafc 60%); 
 }
+
+/* Tùy chỉnh thanh cuộn đẹp kiểu iOS */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(249, 115, 22, 0.2); border-radius: 10px; }
+body.dark-mode .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(51, 65, 85, 0.5); }
 
 /* ----------------------------------------------------
    2. HỆ THỐNG COMPONENT SANG TRỌNG (PREMIUM UI)
 ---------------------------------------------------- */
-/* Glassmorphism cực kỳ cao cấp cho Card */
+/* Glass Bar (Thanh Nav nổi phía trên) */
+.glass-border-bottom {
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+body.dark-mode .glass-border-bottom {
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    /* Ghi đè blur mạnh hơn trên nền tối */
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+}
+
+/* Glassmorphism cực kỳ cao cấp cho Card và Dashboard */
 .glass-card { 
-    background: rgba(255, 255, 255, 0.7); 
-    backdrop-filter: blur(16px); 
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.6); 
-    box-shadow: 0 10px 40px rgba(251, 146, 60, 0.08); 
-    transition: all 0.4s ease;
+    background: rgba(255, 255, 255, 0.65); 
+    backdrop-filter: blur(24px) saturate(150%); 
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.8); 
+    box-shadow: 0 10px 40px rgba(251, 146, 60, 0.06); 
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.glass-card:hover {
-    box-shadow: 0 15px 50px rgba(251, 146, 60, 0.12);
-}
-
-/* Định dạng nội dung bài viết Markdown (Prose) cực kỳ chuyên nghiệp */
-.prose-custom h1 { 
-    font-size: 1.8rem; font-weight: 800; color: #1e293b; 
-    margin: 1.2rem 0 1rem; border-bottom: 2px solid #f97316; padding-bottom: 6px; 
-}
-.prose-custom h2 { 
-    font-size: 1.5rem; font-weight: 700; color: #334155; 
-    margin: 1.5rem 0 0.8rem;
-}
-.prose-custom h3 { 
-    font-size: 1.2rem; font-weight: 700; color: #475569; 
-    margin: 1.2rem 0 0.6rem;
-}
-.prose-custom p { 
-    margin-bottom: 1.2rem; line-height: 1.75; color: #475569; font-size: 0.98rem; text-align: justify;
-}
-.prose-custom strong { font-weight: 700; color: #1e293b; }
-.prose-custom a { color: #f97316; text-decoration: underline; font-weight: 600; transition: color 0.2s; }
-.prose-custom a:hover { color: #ea580c; }
-.prose-custom ul { list-style-type: disc; margin: 1rem 0 1rem 1.5rem; color: #475569; }
-.prose-custom ol { list-style-type: decimal; margin: 1rem 0 1rem 1.5rem; color: #475569; }
-.prose-custom li { margin-bottom: 0.5rem; line-height: 1.6; }
-.prose-custom li > p { margin-bottom: 0.5rem; }
-.prose-custom blockquote { 
-    border-left: 4px solid #f97316; padding: 0.5rem 1rem; 
-    margin: 1.5rem 0; font-style: italic; color: #64748b; background: rgba(249, 115, 22, 0.05); border-radius: 0 8px 8px 0;
-}
-.prose-custom code { 
-    background: #fee2e2; color: #991b1b; padding: 0.2rem 0.4rem; 
-    border-radius: 4px; font-size: 0.85em; font-family: monospace; font-weight: 600;
-}
-.prose-custom pre {
-    background: #1e293b; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0;
-}
-.prose-custom pre > code {
-    background: transparent; color: #e2e8f0; padding: 0; font-weight: 400;
+.glass-card:active {
+    transform: scale(0.98);
 }
 
 /* ----------------------------------------------------
-   3. HIỆU ỨNG CHUYỂN TAB VÀ MENU BÊN (NAVIGATION)
+   3. HIỆU ỨNG CHUYỂN TOOL KIỂU iOS TRƯỢT (NATIVE ROUTING)
 ---------------------------------------------------- */
-.tab-panel { display: none; animation: fadeIn 0.4s ease; }
-.tab-panel.active { display: block; }
-
-.nav-btn.active { 
-    color: #ef4444 !important; background: #fee2e2; font-weight: 700; border-radius: 999px; 
+.tab-panel { 
+    display: none; 
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
 }
-.mobile-nav-btn.active { 
-    color: #ef4444 !important; background: #fee2e2; border-left: 4px solid #ef4444; font-weight: 700; 
+.tab-panel:not(#tab-home) {
+    padding-top: calc(env(safe-area-inset-top) + 65px);
 }
-
-/* Menu Dropdown Animation */
-#desktop-nav { transition: opacity 0.4s ease, transform 0.4s ease; }
-#mobile-menu:not(.hidden) {
-    animation: menuPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-origin: top right;
-}
-
-@keyframes fadeIn { 
-    from { opacity: 0; transform: translateY(15px); } 
-    to { opacity: 1; transform: translateY(0); } 
-}
-@keyframes menuPop {
-    0% { opacity: 0; transform: scale(0.8) translateY(-15px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
+.tab-panel.active { 
+    display: block; 
+    /* Dùng Animation thay vì Transition để nó chạy mỗi khi gắn class */
+    animation: appSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Mobile Nav Tùy Chỉnh Cuộn */
-.mobile-nav-btn {
-    margin: 0 8px; border-radius: 12px;
-    width: calc(100% - 16px) !important;
-    transition: all 0.2s ease;
+@keyframes appSlideIn { 
+    0% { opacity: 0; transform: scale(0.96) translateY(30px); } 
+    100% { opacity: 1; transform: scale(1) translateY(0); } 
 }
-.mobile-nav-btn:hover { transform: translateX(6px); }
 
-#mobile-nav {
-    max-height: 410px; overflow-y: auto; overflow-x: hidden !important; scroll-behavior: smooth;
+/* Hiệu ứng của Home Panel nhẹ hơn */
+#tab-home.active {
+    animation: homeFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
-#mobile-nav::-webkit-scrollbar { width: 4px; }
-#mobile-nav::-webkit-scrollbar-track { background: transparent; margin: 10px 0; }
-#mobile-nav::-webkit-scrollbar-thumb { background-color: rgba(249, 115, 22, 0.3); border-radius: 10px; }
+@keyframes homeFadeIn {
+    0% { opacity: 0; transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+}
 
 /* ----------------------------------------------------
-   4. HEADER TÀNG HÌNH & CUỘN TRANG (SCROLL EFFECTS)
+   4. CHẾ ĐỘ TỐI ƯU DARK MODE AMOLED BLACK (SÂU & SANG)
 ---------------------------------------------------- */
-#main-header, body.dark-mode #main-header {
-    background-color: transparent !important;
-    border: none !important; box-shadow: none !important; backdrop-filter: none !important;
-    transition: all 0.5s ease;
-}
-
-.header-scrolled { background-color: transparent !important; pointer-events: none; }
-.header-scrolled #main-logo-wrapper, .header-scrolled button { pointer-events: auto; }
-
-.logo-wrapper {
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-    transform-origin: right center;
-}
-.header-scrolled .logo-wrapper {
-    transform: translateX(calc(100vw - 120px)) scale(0.1); opacity: 0;
-}
-@media (min-width: 768px) {
-    .header-scrolled .logo-wrapper { transform: translateX(30vw) scale(0.1); }
-}
-
-#mobile-menu-btn { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important; }
-
-/* Giao diện nút khi cuộn */
-.header-scrolled #mobile-menu-btn {
-    border-color: rgba(249, 115, 22, 0.6) !important; 
-    box-shadow: 0 0 20px rgba(249, 115, 22, 0.25) !important; 
-    color: rgba(249, 115, 22, 1) !important;
-    background-color: rgba(255, 255, 255, 0.95) !important;
-}
-body.dark-mode .header-scrolled #mobile-menu-btn {
-    border-color: rgba(45, 212, 191, 0.6) !important;
-    box-shadow: 0 0 20px rgba(45, 212, 191, 0.25) !important;
-    color: rgba(45, 212, 191, 1) !important;
-    background-color: rgba(30, 41, 59, 0.95) !important;
-}
-
-.header-scrolled #mobile-menu { pointer-events: auto !important; }
-
-/* ----------------------------------------------------
-   5. CHẾ ĐỘ TỐI ƯU DARK MODE GLOBAL
----------------------------------------------------- */
-/* Nền tối cơ bản */
+/* Nền AMOLED tối nguyên bản (Tiết kiệm pin, Sang trọng) */
 body.dark-mode { 
-    background: radial-gradient(circle at top right, #1e293b, #0f172a 70%) !important; 
-    color: #f8fafc !important; 
-}
-body.dark-mode .glass-card { 
-    background: rgba(30, 41, 59, 0.7) !important; 
-    border-color: rgba(255, 255, 255, 0.08) !important; 
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important; 
+    background: #000000 !important; /* Đen tuyền 100% OLED */
+    color: #e2e8f0 !important; 
 }
 
-/* Bắt các lớp màu sáng để tối ưu thành màu trầm hơn */
+/* Khối glass trong bóng tối */
+body.dark-mode .glass-card { 
+    background: rgba(20, 20, 20, 0.6) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.05) !important; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important; 
+}
+
+/* Tùy chỉnh màu chữ tự động lật Tối/Sáng */
 body.dark-mode .bg-white, body.dark-mode [class*="bg-white/"] {
-    background-color: rgba(30, 41, 59, 0.85) !important;
+    background-color: rgba(20, 20, 20, 0.8) !important;
     border-color: rgba(255, 255, 255, 0.05) !important;
     color: #e2e8f0 !important;
 }
 
-/* Đảo chữ Sáng / Tối */
 body.dark-mode [class*="text-slate-8"], body.dark-mode [class*="text-slate-7"], 
 body.dark-mode [class*="text-gray-8"], body.dark-mode [class*="text-gray-7"], 
 body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { 
@@ -190,23 +122,37 @@ body.dark-mode [class*="text-gray-6"], body.dark-mode [class*="text-gray-5"], bo
     color: #94a3b8 !important; 
 }
 
-/* Các trường nhập liệu (Inputs) */
+/* Input Fields trong App */
 body.dark-mode select, body.dark-mode input, body.dark-mode textarea { 
-    background-color: rgba(15, 23, 42, 0.7) !important; 
-    color: #f8fafc !important; border-color: #334155 !important; 
+    background-color: rgba(255, 255, 255, 0.05) !important; 
+    color: #f8fafc !important; border-color: rgba(255, 255, 255, 0.1) !important; 
 }
 body.dark-mode select:focus, body.dark-mode input:focus, body.dark-mode textarea:focus { 
-    border-color: #f97316 !important; box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25) !important; 
+    border-color: #f97316 !important; box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2) !important; 
 }
 
-/* Chi tiết nút ấn Tối/Sáng */
-body.dark-mode #mobile-menu { background-color: rgba(15, 23, 42, 0.98) !important; border-color: #475569 !important; }
-body.dark-mode #dark-mode-btn { background-color: #334155 !important; color: #f8fafc !important; }
-body.dark-mode #dark-mode-btn:hover { background-color: #475569 !important; color: #f97316 !important; }
-body.dark-mode #mobile-nav::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
+/* Định dạng nội dung bài viết Markdown (Prose) */
+.prose-custom h1 { font-size: 1.8rem; font-weight: 800; color: #1e293b; margin: 1.2rem 0 1rem; border-bottom: 2px solid #f97316; padding-bottom: 6px; }
+.prose-custom h2 { font-size: 1.5rem; font-weight: 700; color: #334155; margin: 1.5rem 0 0.8rem; }
+.prose-custom h3 { font-size: 1.2rem; font-weight: 700; color: #475569; margin: 1.2rem 0 0.6rem; }
+.prose-custom p { margin-bottom: 1.2rem; line-height: 1.75; color: #475569; text-align: justify; }
+.prose-custom strong { font-weight: 700; color: #1e293b; }
+.prose-custom a { color: #f97316; text-decoration: underline; font-weight: 600; }
+.prose-custom ul, .prose-custom ol { margin: 1rem 0 1rem 1.5rem; color: #475569; }
+.prose-custom blockquote { border-left: 4px solid #f97316; padding: 0.5rem 1rem; margin: 1.5rem 0; font-style: italic; color: #64748b; background: rgba(249, 115, 22, 0.05); }
+.prose-custom code { background: #fee2e2; color: #991b1b; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85em; font-family: monospace; font-weight: 600; }
+.prose-custom pre { background: #1e293b; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0; }
+.prose-custom pre > code { background: transparent; color: #e2e8f0; font-weight: 400; }
+
+body.dark-mode .prose-custom { color: #cbd5e1 !important; }
+body.dark-mode .prose-custom h1, body.dark-mode .prose-custom h2, body.dark-mode .prose-custom h3, body.dark-mode .prose-custom strong { color: #f8fafc !important; }
+body.dark-mode .prose-custom a { color: #fb923c !important; }
+body.dark-mode .prose-custom code { background-color: #334155 !important; color: #f8fafc !important; border: 1px solid #475569; }
+body.dark-mode .prose-custom pre { background-color: #0f172a !important; border: 1px solid #334155; }
+body.dark-mode .prose-custom blockquote { color: #94a3b8 !important; background-color: rgba(249, 115, 22, 0.1); }
 
 /* ----------------------------------------------------
-   6. BẦU TRỜI SAO GLOBAL CHO DARK MODE
+   5. BẦU TRỜI SAO GLOBAL CHO DARK MODE
 ---------------------------------------------------- */
 #global-star-bg {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -214,15 +160,12 @@ body.dark-mode #mobile-nav::-webkit-scrollbar-thumb { background-color: rgba(45,
     z-index: -999; pointer-events: none; overflow: hidden;
     background: transparent; opacity: 0; transition: opacity 0.8s ease-in-out;
 }
-
 html.dark #global-star-bg, body.dark-mode #global-star-bg { opacity: 1; }
-
 .global-star {
     position: absolute; background-color: #ffffff; border-radius: 50%; opacity: 0;
-    will-change: transform, opacity; /* Báo cho trình duyệt tối ưu GPU */
+    will-change: transform, opacity;
     animation: global-twinkle infinite alternate ease-in-out;
 }
-
 @keyframes global-twinkle {
     0% { opacity: 0; transform: scale(0.3); }
     50% { opacity: 0.8; transform: scale(1); }

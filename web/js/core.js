@@ -1,23 +1,8 @@
 /* ==========================================================
-   LÕI HỆ THỐNG
+   LÕI HỆ THỐNG - GIAO DIỆN APP NATIVE
 ========================================================== */
 
-// --- 1. BẢN ĐỒ MENU ---
-const menuConfig = [
-  { id: "tab-home", name: "Trang Chủ" },
-  { id: "tab-calc", name: "Tính Toán" },
-  { id: "tab-finance", name: "Lãi Suất" },
-  { id: "tab-calendar", name: "Lịch Vạn Niên" },
-  { id: "tab-time-calc", name: "Thời Gian" },
-  { id: "tab-baby-name", name: "Đặt Tên Con" },
-  { id: "tab-xiangqi", name: "Cờ Tướng" },
-  { id: "tab-wheel", name: "Quay ngẫu nhiên" },
-  { id: "tab-html-runner", name: "HTML Runner" },
-  { id: "tab-image-to-svg", name: "Tạo ảnh SVG" },
-  { id: "tab-ereader", name: "Đọc Sách" },
-];
-
-// --- 2. BỘ ĐỊNH TUYẾN (LAZY LOAD MAP) ---
+// --- 1. KIỂM SOÁT ĐỊNH TUYẾN ---
 const toolMap = {
   "tab-home": "./tools/01-home.js",
   "tab-calc": "./tools/02-calc.js",
@@ -32,53 +17,31 @@ const toolMap = {
   "tab-ereader": "./tools/11-ereader.js",
 };
 
-// --- 3. KHAI BÁO CÁC PHẦN TỬ GIAO DIỆN ---
-const desktopNav = document.getElementById("desktop-nav");
-const mobileNav = document.getElementById("mobile-nav");
-const mobileMenu = document.getElementById("mobile-menu");
-const mainHeader = document.getElementById("main-header");
+const appContainer = document.getElementById("app-container");
+const nativeAppBar = document.getElementById("native-app-bar");
+const btnBackHome = document.getElementById("btn-back-home");
 
-if (mobileMenu) {
-  mobileMenu.classList.add(
-    "max-h-[70vh]",
-    "overflow-y-auto",
-    "custom-scrollbar",
-  );
-}
-
-// --- 4. HÀM TẠO MENU (KHÔNG ICON, TỐI ƯU TYPOGRAPHY) ---
-if (desktopNav && mobileNav) {
-  desktopNav.innerHTML = "";
-  mobileNav.innerHTML = "";
-  menuConfig.forEach((tool) => {
-    desktopNav.innerHTML += `
-            <button onclick="switchTab('${tool.id}')" data-target="${tool.id}" 
-                class="nav-btn flex items-center px-4 py-2 text-gray-500 hover:text-orange-500 transition rounded-xl hover:bg-orange-50/50 text-[12px] font-bold uppercase tracking-wider">
-                <span>${tool.name}</span>
-            </button>`;
-
-    mobileNav.innerHTML += `
-            <button onclick="switchTab('${tool.id}')" data-target="${tool.id}" 
-                class="mobile-nav-btn block w-full px-6 py-4 text-left text-gray-600 hover:bg-orange-50 transition border-l-4 border-transparent hover:border-orange-500 text-[13px] font-bold uppercase tracking-widest">
-                ${tool.name}
-            </button>`;
-  });
-}
-
-// --- 5. HÀM CHUYỂN TAB (ĐÃ FIX LỖI KẸT LINK ?POST) ---
+// --- 2. HÀM CHUYỂN TAB CÓ ANIMATION MƯỢT MÀ ---
 window.switchTab = async function (tabId) {
+  // Bật/tắt thanh Top Navigation Bar tuỳ thuộc vào trang
+  if (tabId === "tab-home") {
+      // Ẩn thanh AppBar trượt lên khi về Home
+      nativeAppBar.classList.remove("translate-y-0", "opacity-100");
+      nativeAppBar.classList.add("-translate-y-full", "opacity-0");
+  } else {
+      // Hiện thanh AppBar trượt xuống khi ở trong Tool
+      nativeAppBar.classList.remove("-translate-y-full", "opacity-0");
+      nativeAppBar.classList.add("translate-y-0", "opacity-100");
+  }
+
+  // Tắt tất cả các Panel hiện tại
   document.querySelectorAll(".tab-panel").forEach((p) => {
     p.classList.remove("active");
-    p.style.display = "none";
   });
-  document
-    .querySelectorAll(".nav-btn, .mobile-nav-btn")
-    .forEach((b) => b.classList.remove("active"));
-
-  if (mobileMenu) mobileMenu.classList.add("hidden");
 
   let targetPanel = document.getElementById(tabId);
 
+  // Lazy Load nếu Tool chưa được tải bao giờ
   if (!targetPanel) {
     const toolUrl = toolMap[tabId];
     if (toolUrl) {
@@ -94,21 +57,14 @@ window.switchTab = async function (tabId) {
   }
 
   if (targetPanel) {
-    document.querySelectorAll(".tab-panel").forEach((p) => {
-      p.classList.remove("active");
-      p.style.display = "none";
-    });
+    // Reset cuộn của Container
+    if(appContainer) appContainer.scrollTop = 0;
+    
+    // Kích hoạt Active để chạy Animation trong CSS
     targetPanel.classList.add("active");
-    targetPanel.style.display = "block";
 
-    document
-      .querySelectorAll(`[data-target="${tabId}"]`)
-      .forEach((b) => b.classList.add("active"));
-
-    // --- XỬ LÝ LÀM SẠCH URL TẠI ĐÂY ---
     const newUrl = new URL(window.location);
     if (tabId !== "tab-home") {
-      // Nếu nhảy sang tab khác, tự động xóa đuôi ?post= đi
       newUrl.searchParams.delete("post");
     }
     newUrl.hash = tabId;
@@ -116,7 +72,14 @@ window.switchTab = async function (tabId) {
   }
 };
 
-// --- 6. HÀM CHUYỂN ĐỔI VÀ ĐỒNG BỘ DARK MODE ---
+// Gắn nút Quay Lại trang chủ
+if(btnBackHome) {
+    btnBackHome.addEventListener("click", () => {
+        window.switchTab("tab-home");
+    });
+}
+
+// --- 3. HÀM CHUYỂN ĐỔI VÀ ĐỒNG BỘ DARK MODE ---
 function applyTheme(isDark) {
   if (isDark) {
     document.documentElement.classList.add("dark");
@@ -145,43 +108,7 @@ window.toggleDarkMode = () => {
   localStorage.setItem("nothing_dark_mode", willBeDark);
 };
 
-// ==========================================================
-// GẮN SỰ KIỆN TRỰC TIẾP
-// ==========================================================
-
-if (mainHeader) {
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      mainHeader.classList.add("header-scrolled");
-    } else {
-      mainHeader.classList.remove("header-scrolled");
-    }
-  });
-}
-
-const mobileMenuBtn = document.getElementById("mobile-menu-btn");
-if (mobileMenuBtn && mobileMenu) {
-  mobileMenuBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-  });
-
-  document.addEventListener("click", function (event) {
-    const isMenuOpen = !mobileMenu.classList.contains("hidden");
-
-    if (isMenuOpen) {
-      if (
-        !mobileMenu.contains(event.target) &&
-        !mobileMenuBtn.contains(event.target)
-      ) {
-        mobileMenu.classList.add("hidden");
-      }
-    }
-  });
-}
-
-const darkModeBtn =
-  document.getElementById("dark-mode-btn") ||
-  document.querySelector('[onclick="toggleDarkMode()"]');
+const darkModeBtn = document.getElementById("dark-mode-btn") || document.querySelector('[onclick="toggleDarkMode()"]');
 if (darkModeBtn) {
   darkModeBtn.addEventListener("click", window.toggleDarkMode);
   darkModeBtn.removeAttribute("onclick");
@@ -202,24 +129,27 @@ systemPrefersDark.addEventListener("change", (e) => {
   }
 });
 
-document.addEventListener(
-  "touchmove",
-  function (event) {
+// Ngăn chặn thu phóng (Zoom) mặc định của trình duyệt để tạo cảm giác App Native
+document.addEventListener("touchmove", function (event) {
     if (event.scale !== 1 && event.scale !== undefined) event.preventDefault();
-  },
-  { passive: false },
-);
-document.addEventListener("gesturestart", function (event) {
-  event.preventDefault();
+}, { passive: false });
+document.addEventListener("gesturestart", function (event) { 
+    event.preventDefault(); 
 });
 
+// --- 4. KHỞI ĐỘNG TRANG ĐẦU TIÊN ---
 localStorage.removeItem("my_active_tab");
 let initialTab = "tab-home";
 if (window.location.hash) {
   const hashTab = window.location.hash.substring(1);
   if (toolMap[hashTab]) initialTab = hashTab;
 }
-switchTab(initialTab);
+
+// Khởi chạy App sau khi DOM load
+window.addEventListener("DOMContentLoaded", () => {
+    switchTab(initialTab);
+    initGlobalStars();
+});
 
 // =========================================
 // HIỆU ỨNG BẦU TRỜI SAO TỰ ĐỘNG
@@ -229,7 +159,6 @@ function initGlobalStars() {
 
   const starContainer = document.createElement("div");
   starContainer.id = "global-star-bg";
-
   const starCount = 70;
 
   for (let i = 0; i < starCount; i++) {
@@ -248,8 +177,5 @@ function initGlobalStars() {
 
     starContainer.appendChild(star);
   }
-
   document.body.appendChild(starContainer);
 }
-
-document.addEventListener("DOMContentLoaded", initGlobalStars);
