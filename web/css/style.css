@@ -22,7 +22,7 @@ html, body {
     -webkit-touch-callout: none;
     user-select: none;
     -webkit-user-select: none;
-    font-family: 'Lexend', sans-serif; 
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.6s ease;
 }
 
@@ -33,7 +33,30 @@ input, textarea, .prose-custom, .allow-select {
 }
 
 body { 
-    background: radial-gradient(120% 120% at 50% -20%, #fafaf9, #f1f5f9 60%); 
+    background: #f8fafc;
+}
+
+/* KHỐI MÀU MỜ SẮC SẢO (VIVID ABSTRACT ORBS) ĐỂ CHUYỂN WEB THÀNH APP ĐẸP NHƯ iOS */
+.ambient-orb-1, .ambient-orb-2, .ambient-orb-3 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.5;
+    animation: orb-drift 15s infinite alternate ease-in-out;
+}
+.ambient-orb-1 { width: 35vw; height: 35vw; background: #fb923c; top: -10vw; left: -10vw; animation-delay: 0s; }
+.ambient-orb-2 { width: 45vw; height: 45vw; background: #38bdf8; top: 40vh; right: -15vw; animation-delay: -5s; }
+.ambient-orb-3 { width: 30vw; height: 30vw; background: #c084fc; bottom: -5vw; left: 10vw; animation-delay: -10s; }
+
+body.dark-mode .ambient-orb-1 { background: #9333ea; opacity: 0.3; }
+body.dark-mode .ambient-orb-2 { background: #2563eb; opacity: 0.25; }
+body.dark-mode .ambient-orb-3 { background: #c2410c; opacity: 0.3; }
+
+@keyframes orb-drift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 50px) scale(1.1); }
 }
 
 /* Tùy chỉnh padding an toàn */
@@ -103,9 +126,12 @@ body.dark-mode .glass-border-bottom {
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
 }
-.tab-panel:not(#tab-home) {
+.tab-panel:not(#tab-home):not(#tab-ereader) {
     padding-top: calc(var(--app-bar-pt) + 65px);
     padding-bottom: max(var(--sab), 20px);
+}
+#tab-ereader {
+    padding: 0;
 }
 .tab-panel.active { 
     display: block; 
@@ -115,7 +141,7 @@ body.dark-mode .glass-border-bottom {
 
 @keyframes appSlideIn { 
     0% { opacity: 0; transform: scale(0.96) translateY(30px); } 
-    100% { opacity: 1; transform: scale(1) translateY(0); } 
+    100% { opacity: 1; transform: none; } 
 }
 
 /* Hiệu ứng của Home Panel nhẹ hơn */
@@ -124,7 +150,7 @@ body.dark-mode .glass-border-bottom {
 }
 @keyframes homeFadeIn {
     0% { opacity: 0; transform: scale(1.02); }
-    100% { opacity: 1; transform: scale(1); }
+    100% { opacity: 1; transform: none; }
 }
 
 /* Modal Bottom Sheet */
