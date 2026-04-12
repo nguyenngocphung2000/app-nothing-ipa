@@ -27,6 +27,9 @@ jobs:
         working-directory: app
         run: npx cap sync ios
 
+      - name: Fix script permissions
+        run: chmod -R +x app/ios/App/Pods/ || true && chmod -R +x app/ios/App/App/ || true
+
       - name: Build unsigned Xcode project
         working-directory: app/ios/App
         run: |
