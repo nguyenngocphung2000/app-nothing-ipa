@@ -2,6 +2,13 @@
    NOTHING YET EVERYTHING - APP NATIVE CAO CẤP (GLASS OS)
 ========================================================== */
 
+:root {
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    /* Dành riêng không gian an toàn cho Dynamic Island / Notch */
+    --app-bar-pt: max(var(--sat), 47px);
+}
+
 /* ----------------------------------------------------
    1. CẤU HÌNH CỐT LÕI (CORE BASE)
 ---------------------------------------------------- */
@@ -17,8 +24,28 @@ html, body {
 }
 
 body { 
-    background: radial-gradient(120% 120% at 50% -20%, #fff7ed, #f8fafc 60%); 
+    background: radial-gradient(120% 120% at 50% -20%, #fafaf9, #f1f5f9 60%); 
 }
+
+/* Tùy chỉnh padding an toàn */
+.app-bar-safe-padding {
+    padding-top: calc(var(--app-bar-pt) + 8px);
+    padding-bottom: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+}
+body.dark-mode .app-bar-safe-padding {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(50px) saturate(200%);
+    -webkit-backdrop-filter: blur(50px) saturate(200%);
+}
+
+.app-container-safe-padding {
+    padding-top: var(--sat);
+    padding-bottom: var(--sab);
+}
+
 
 /* Tùy chỉnh thanh cuộn đẹp kiểu iOS */
 .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -45,15 +72,16 @@ body.dark-mode .glass-border-bottom {
 
 /* Glassmorphism cực kỳ cao cấp cho Card và Dashboard */
 .glass-card { 
-    background: rgba(255, 255, 255, 0.65); 
-    backdrop-filter: blur(24px) saturate(150%); 
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.8); 
-    box-shadow: 0 10px 40px rgba(251, 146, 60, 0.06); 
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(255, 255, 255, 0.5); 
+    backdrop-filter: blur(40px) saturate(180%); 
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.9); 
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.02); 
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glass-card:active {
-    transform: scale(0.98);
+    transform: scale(0.96) translateY(2px);
+    box-shadow: 0 5px 20px -5px rgba(0, 0, 0, 0.05);
 }
 
 /* ----------------------------------------------------
@@ -67,7 +95,8 @@ body.dark-mode .glass-border-bottom {
     width: 100%;
 }
 .tab-panel:not(#tab-home) {
-    padding-top: calc(env(safe-area-inset-top) + 65px);
+    padding-top: calc(var(--app-bar-pt) + 65px);
+    padding-bottom: max(var(--sab), 20px);
 }
 .tab-panel.active { 
     display: block; 
@@ -100,9 +129,9 @@ body.dark-mode {
 
 /* Khối glass trong bóng tối */
 body.dark-mode .glass-card { 
-    background: rgba(20, 20, 20, 0.6) !important; 
-    border: 1px solid rgba(255, 255, 255, 0.05) !important; 
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important; 
+    background: rgba(25, 25, 25, 0.5) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.08) !important; 
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0,0,0,0.5) !important; 
 }
 
 /* Tùy chỉnh màu chữ tự động lật Tối/Sáng */

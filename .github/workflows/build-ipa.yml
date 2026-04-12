@@ -46,11 +46,11 @@ jobs:
         run: |
           mkdir -p Payload
           mv build/Build/Products/Release-iphoneos/App.app Payload/
-          zip -r EReader.ipa Payload
+          zip -r nothing.ipa Payload
           
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-ipa
-          path: app/ios/App/EReader.ipa
+          path: app/ios/App/nothing.ipa
           retention-days: 7

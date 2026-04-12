@@ -16,18 +16,18 @@
 <body class="text-slate-800 transition-colors duration-500 overflow-hidden bg-slate-50 relative pointer-events-none">
     
     <!-- THANH ĐIỀU HƯỚNG NATIVE APP (Sẽ ẩn ở Home, hiện ở Tool) -->
-    <div id="native-app-bar" class="fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 transform -translate-y-full opacity-0 pointer-events-none pb-2 pt-[calc(env(safe-area-inset-top)+10px)] backdrop-blur-2xl glass-border-bottom">
-        <div class="max-w-[1600px] mx-auto px-4 flex items-center justify-between pointer-events-auto">
-            <button id="btn-back-home" class="flex items-center gap-1.5 focus:outline-none transition active:scale-95 group">
+    <div id="native-app-bar" class="fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 transform -translate-y-full opacity-0 pointer-events-none glass-border-bottom app-bar-safe-padding">
+        <div class="max-w-[1600px] mx-auto px-4 flex items-center justify-between pointer-events-auto w-full">
+            <button id="btn-back-home" class="flex items-center gap-2 focus:outline-none transition active:scale-90 group px-2 py-1 -ml-2">
                 <!-- Mũi tên Typographic siêu gọn -->
-                <span class="text-2xl font-light text-slate-400 group-hover:text-orange-500 transition-colors -mt-0.5">&lsaquo;</span>
-                <span class="font-bold text-[10px] md:text-[11px] uppercase tracking-widest text-slate-500 group-hover:text-orange-500 transition-colors">Trang Chủ</span>
+                <span class="text-3xl font-light text-slate-400 group-hover:text-orange-500 transition-colors leading-[0] mb-[2px]">&lsaquo;</span>
+                <span class="font-bold text-[11px] md:text-[12px] uppercase tracking-widest text-slate-500 group-hover:text-orange-500 transition-colors">Trang Chủ</span>
             </button>
 
             <!-- Tên Tool hiển thị động (Tuỳ chọn hiển thị thêm sau này) -->
-            <span id="current-tool-name" class="absolute left-1/2 -translate-x-1/2 font-extrabold text-[12px] uppercase text-slate-700 tracking-wider hidden sm:block opacity-0 transition-opacity">N/A</span>
+            <span id="current-tool-name" class="absolute left-1/2 -translate-x-1/2 font-extrabold text-[13px] uppercase text-slate-800 dark:text-slate-200 tracking-wider hidden sm:block opacity-0 transition-opacity">N/A</span>
 
-            <button onclick="toggleDarkMode()" class="px-3 md:px-4 py-1.5 rounded-full bg-black/5 dark:bg-white/10 text-slate-500 dark:text-slate-300 hover:text-orange-500 transition border border-black/5 dark:border-white/10 font-bold text-[9px] md:text-[10px] uppercase tracking-[0.2em] relative overflow-hidden" id="dark-mode-btn" title="Giao diện Tối/Sáng">
+            <button onclick="toggleDarkMode()" class="px-4 py-1.5 rounded-full bg-black/5 dark:bg-white/10 text-slate-500 dark:text-slate-300 hover:text-orange-500 transition border border-black/5 dark:border-white/10 font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em] relative overflow-hidden active:scale-90" id="dark-mode-btn" title="Giao diện Tối/Sáng">
                 <span id="text-sun" class="hidden">SÁNG</span>
                 <span id="text-moon" class="">TỐI</span>
             </button>
@@ -35,7 +35,7 @@
     </div>
 
     <!-- KHUNG CHỨA TOÀN BỘ ỨNG DỤNG -->
-    <main id="app-container" class="w-full h-[100dvh] overflow-y-auto overflow-x-hidden custom-scrollbar pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pointer-events-auto">
+    <main id="app-container" class="w-full h-[100dvh] overflow-y-auto overflow-x-hidden custom-scrollbar app-container-safe-padding pointer-events-auto">
         <!-- Các nội dung sẽ được JS Đổ vào đây -->
     </main>
 

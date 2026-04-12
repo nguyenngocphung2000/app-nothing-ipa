@@ -55,13 +55,13 @@ export function setupTool() {
             body.dark-mode #guide-no-result p.text-gray-700 { color: #cbd5e1 !important; }
         </style>
         
-        <div class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 mb-[env(safe-area-inset-bottom)]">
+        <div class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
             <div class="space-y-6 md:space-y-10"> 
                 
                 <!-- HEADER CHÍNH CỦA APP (Nằm dưới vùng chóp Notch nhờ padding tổng của body/app-container) -->
                 <div class="flex items-center justify-between pb-6 border-b border-black/5 dark:border-white/5">
                     <div>
-                        <h1 class="text-[28px] md:text-[40px] font-black text-slate-800 dark:text-white tracking-tighter leading-none mb-1">NOTHING</h1>
+                        <h1 class="text-[32px] md:text-[44px] font-black text-slate-800 dark:text-white tracking-tighter leading-none mb-1">NOTHING</h1>
                         <p class="font-bold text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Yet Everything</p>
                     </div>
                 </div>
