@@ -101,13 +101,13 @@ export function setupTool() {
         .er-zone-center { flex: 1; }
         .er-zone-right { flex: 0 0 25%; }
   
+        /* SỬA LỖI HIỂN THỊ: Đổi display flex thành block để WebKit không nuốt mất chữ */
         .er-mount {
             position: absolute;
             inset: 0;
             z-index: 1;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
+            display: block; 
         }
   
         .er-mount.mode-scroll { overflow-y: auto; overflow-x: hidden; }
@@ -116,6 +116,7 @@ export function setupTool() {
         #er-text-content {
             padding: 40px 20px;
             max-width: 800px;
+            margin: 0 auto;
             width: 100%;
             line-height: inherit;
             font-family: inherit;
@@ -132,8 +133,8 @@ export function setupTool() {
             max-width: none;
         }
   
-        #er-epub-view { width: 100%; height: 100%; max-width: 900px; }
-        #er-pdf-view { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        #er-epub-view { width: 100%; height: 100%; max-width: 900px; margin: 0 auto; }
+        #er-pdf-view { width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; }
         .er-mount.mode-scroll #er-pdf-view canvas { margin-bottom: 20px; max-width: 100%; }
         .er-mount.mode-paginate #er-pdf-view canvas { max-height: 100vh; max-width: 100%; object-fit: contain; }
   
@@ -222,7 +223,7 @@ export function setupTool() {
                   </span>
                   <input type="file" id="er-file-loader" class="er-file-input" accept=".epub,.pdf,.txt,.md,.html" />
               </label>
-              <div class="mt-8 text-center text-[10px] opacity-40 uppercase tracking-widest font-bold" style="color: var(--er-text)">Chúc bạn đọc sách vui vẻ!</div>
+              <div class="mt-8 text-center text-[10px] opacity-40 uppercase tracking-widest font-bold" style="color: var(--er-text)">Auto Memory Clearing (Nhẹ & Không Rác)</div>
           </div>
   
           <div class="ereader-reader" id="er-reader">
@@ -297,7 +298,7 @@ export function setupTool() {
   
           <div id="er-loading">
               <div class="er-spinner mb-4"></div>
-              <div class="font-bold text-center px-4" id="er-loading-text">Đang tải thư viện hỗ trợ...<br><small class="opacity-50">Vui lòng chờ trong giây lát</small></div>
+              <div class="font-bold text-center px-4" id="er-loading-text">Đang tải dữ liệu...<br><small class="opacity-50">Vui lòng chờ trong giây lát</small></div>
           </div>
       </div>
     `;
@@ -383,43 +384,43 @@ export function setupTool() {
     let pdfCurrentPage = 1;
     let textCurrentScroll = 0; 
   
+    // Tải script an toàn, kiểm tra trên window object
     function loadExternalScripts(cb) {
-        if(extLibsLoaded) return cb();
+        if (window.ePub && window.pdfjsLib && window.JSZip) {
+            return cb();
+        }
         
-        loadingDisplay.style.display = "flex";
-        loadingText.innerHTML = "Đang tải thư viện hỗ trợ...<br><small class='opacity-50'>Lần đầu có thể mất chút thời gian</small>";
-        
-        let loaded = 0;
+        let loadedCount = 0;
         let hasError = false;
+        
         const scripts = [
-            { id: "jszip-js", src: "js/libs/jszip.min.js" },
-            { id: "epub-js", src: "js/libs/epub.min.js" },
-            { id: "pdf-js", src: "js/libs/pdf.min.js" }
+            { id: "jszip-js", src: "js/libs/jszip.min.js", check: () => window.JSZip },
+            { id: "epub-js", src: "js/libs/epub.min.js", check: () => window.ePub },
+            { id: "pdf-js", src: "js/libs/pdf.min.js", check: () => window.pdfjsLib }
         ];
         
         scripts.forEach(s => {
-            if (document.getElementById(s.id)) checkLoaded();
-            else {
+            if (document.getElementById(s.id) || s.check()) {
+                onSingleScriptReady();
+            } else {
                 let scriptEl = document.createElement("script");
                 scriptEl.id = s.id; 
                 scriptEl.src = s.src;
-                scriptEl.onload = checkLoaded;
-                
+                scriptEl.onload = onSingleScriptReady;
                 scriptEl.onerror = () => {
                     if (hasError) return;
                     hasError = true;
-                    loadingDisplay.style.display = "none";
-                    alert(`Không thể tải file: ${s.src}. \nVui lòng kiểm tra lại đường dẫn thư mục js/libs/`);
+                    alert(`Không tìm thấy file: ${s.src}. Hãy kiểm tra lại thư mục js/libs/`);
                     resetToHome();
                 };
                 document.head.appendChild(scriptEl);
             }
         });
         
-        function checkLoaded() {
+        function onSingleScriptReady() {
             if (hasError) return;
-            loaded++;
-            if (loaded === scripts.length) {
+            loadedCount++;
+            if (loadedCount === scripts.length) {
                 if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc = "js/libs/pdf.worker.min.js";
                 extLibsLoaded = true;
                 cb();
@@ -500,13 +501,18 @@ export function setupTool() {
         }
     }
   
+    // ==========================================
+    // KIẾN TRÚC MỚI: CHỐNG LỖI MẤT QUYỀN TRUY CẬP FILE TRÊN IOS
+    // ==========================================
     fileLoader.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
   
         currentFile = file.name;
         titleText.innerText = currentFile.substring(0, 30);
+        let ext = file.name.split('.').pop().toLowerCase();
         
+        // Chuẩn bị giao diện
         homeScreen.style.display = "none";
         readerScreen.classList.add("active");
         document.body.style.overflow = "hidden"; 
@@ -515,57 +521,83 @@ export function setupTool() {
         epubView.style.display = "none";
         pdfView.style.display = "none";
         tocList.innerHTML = `<div class="p-4 opacity-50">Không có mục lục...</div>`;
-        
-        let ext = file.name.split('.').pop().toLowerCase();
         applySettings();
         
         loadingDisplay.style.display = "flex";
-        loadingText.innerHTML = "Đang xử lý nội dung...<br><small class='opacity-50'>Xin đợi một chút</small>";
+        loadingText.innerHTML = "Đang hút dữ liệu vào RAM...<br><small class='opacity-50'>Chống lỗi thất thoát file iOS</small>";
 
         e.target.value = "";
   
-        setTimeout(() => {
+        // BẮT BUỘC SỬ DỤNG FILEREADER ĐỂ ĐỌC FILE NGAY LẬP TỨC
+        // Nếu dùng setTimeout ở đây, iOS sẽ cắt quyền truy cập File Object.
+        const reader = new FileReader();
+
+        reader.onerror = () => {
+            alert("Hệ điều hành từ chối quyền đọc file này. Hãy thử chọn lại.");
+            resetToHome();
+        };
+
+        reader.onload = (event) => {
+            const fileData = event.target.result;
+            
+            // Dữ liệu đã nằm gọn trong RAM, bây giờ tha hồ gọi thư viện xử lý
+            loadingText.innerHTML = "Đang dựng trang sách...<br><small class='opacity-50'>Xin đợi một chút</small>";
+
             loadExternalScripts(() => {
                 try {
-                    if (ext === "epub") { currentFormat = "epub"; initEpub(file); }
-                    else if (ext === "pdf") { currentFormat = "pdf"; initPdf(file); }
-                    else { currentFormat = "txt"; initText(file); }
+                    if (ext === "epub") { 
+                        if(!window.ePub) throw new Error("Chưa có thư viện Epub.js");
+                        currentFormat = "epub"; 
+                        renderEpubData(fileData); 
+                    }
+                    else if (ext === "pdf") { 
+                        if(!window.pdfjsLib) throw new Error("Chưa có thư viện PDF.js");
+                        currentFormat = "pdf"; 
+                        renderPdfData(fileData); 
+                    }
+                    else { 
+                        currentFormat = "txt"; 
+                        renderTextData(fileData); 
+                    }
                 } catch(error) {
-                    alert("Lỗi không thể mở sách: " + error.message);
+                    alert("Lỗi khi mở sách: " + error.message);
                     resetToHome();
                 }
             });
-        }, 100);
+        };
+
+        // Kích hoạt việc hút file vào RAM
+        if (ext === 'txt' || ext === 'md' || ext === 'html') {
+            reader.readAsText(file);
+        } else {
+            reader.readAsArrayBuffer(file);
+        }
     });
   
-    function initEpub(file) {
+    // ==========================================
+    // CÁC HÀM XỬ LÝ SAU KHI ĐÃ CÓ DỮ LIỆU
+    // ==========================================
+    function renderEpubData(arrayBuffer) {
         epubView.style.display = "block";
-        const reader = new FileReader();
-        reader.onload = e => {
-            try {
-                epubBook = ePub(e.target.result);
-                softReloadEpub(); 
-                
-                epubBook.loaded.navigation.then(nav => {
-                    tocList.innerHTML = "";
-                    if (nav && nav.length > 0) {
-                        nav.forEach(item => {
-                            let a = document.createElement("div");
-                            a.className = "er-toc-item";
-                            a.innerText = item.label.trim();
-                            a.onclick = () => { epubRendition.display(item.href); tocModal.classList.remove("show"); };
-                            tocList.appendChild(a);
-                        });
-                    } else {
-                        tocList.innerHTML = `<div class="p-4 opacity-50">Không có mục lục...</div>`;
-                    }
+        epubBook = window.ePub(arrayBuffer);
+        softReloadEpub(); 
+        
+        epubBook.loaded.navigation.then(nav => {
+            tocList.innerHTML = "";
+            if (nav && nav.length > 0) {
+                nav.forEach(item => {
+                    let a = document.createElement("div");
+                    a.className = "er-toc-item";
+                    a.innerText = item.label.trim();
+                    a.onclick = () => { epubRendition.display(item.href); tocModal.classList.remove("show"); };
+                    tocList.appendChild(a);
                 });
-            } catch (err) {
-                alert("Định dạng Epub bị hỏng hoặc không được hỗ trợ.");
-                resetToHome();
+            } else {
+                tocList.innerHTML = `<div class="p-4 opacity-50">Không có mục lục...</div>`;
             }
-        };
-        reader.readAsArrayBuffer(file);
+        }).catch(() => {
+            tocList.innerHTML = `<div class="p-4 opacity-50">Lỗi không đọc được mục lục</div>`;
+        });
     }
   
     function softReloadEpub() {
@@ -602,22 +634,21 @@ export function setupTool() {
         loadingDisplay.style.display = "none";
     }
   
-    function initPdf(file) {
+    async function renderPdfData(arrayBuffer) {
         pdfView.style.display = "flex";
-        const reader = new FileReader();
-        reader.onload = async e => {
-            try {
-                pdfDoc = await pdfjsLib.getDocument(e.target.result).promise;
-                let saved = getSavedLocation();
-                pdfCurrentPage = saved ? parseInt(saved) : 1;
-                renderPDFPageLogic();
-                loadingDisplay.style.display = "none";
-            } catch (err) {
-                alert("File PDF không hợp lệ hoặc bị mã hóa.");
-                resetToHome();
-            }
-        };
-        reader.readAsArrayBuffer(file);
+        // Convert array buffer qua Uint8Array - Rất quan trọng để PDF.js không bị treo trên iOS
+        let typedArray = new Uint8Array(arrayBuffer);
+        
+        try {
+            pdfDoc = await window.pdfjsLib.getDocument(typedArray).promise;
+            let saved = getSavedLocation();
+            pdfCurrentPage = saved ? parseInt(saved) : 1;
+            renderPDFPageLogic();
+            loadingDisplay.style.display = "none";
+        } catch (err) {
+            alert("File PDF không hợp lệ hoặc bị mã hóa bảo mật.");
+            resetToHome();
+        }
     }
   
     function renderPDFPageLogic() {
@@ -655,19 +686,13 @@ export function setupTool() {
         await page.render({ canvasContext: ctx, viewport: viewport }).promise;
     }
   
-    function initText(file) {
+    function renderTextData(textString) {
         textContent.style.display = "block";
-        const reader = new FileReader();
-        reader.onload = e => {
-            setTimeout(() => {
-                textContent.textContent = e.target.result;
-                let savedScroll = getSavedLocation();
-                if(savedScroll) textCurrentScroll = parseInt(savedScroll);
-                syncTextPagination();
-                loadingDisplay.style.display = "none";
-            }, 50);
-        };
-        reader.readAsText(file);
+        textContent.textContent = textString;
+        let savedScroll = getSavedLocation();
+        if(savedScroll) textCurrentScroll = parseInt(savedScroll);
+        syncTextPagination();
+        loadingDisplay.style.display = "none";
     }
   
     function syncTextPagination() {
