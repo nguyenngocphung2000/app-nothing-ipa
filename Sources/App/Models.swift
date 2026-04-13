@@ -13,7 +13,7 @@ struct PostMeta: Identifiable, Hashable {
     let id: String
     let title: String
     let category: String
-    let filenName: String
+    let fileName: String
 }
 
 class AppData {
@@ -29,13 +29,13 @@ class AppData {
     ]
     
     static let manifest: [PostMeta] = [
-        PostMeta(id: "1", title: "Contact me", category: "Nothing", filenName: "contact"),
-        PostMeta(id: "2", title: "Cách dùng các công cụ AI hiệu quả như một chuyên gia", category: "Nothing", filenName: "guide-use-ai"),
-        PostMeta(id: "3", title: "Tạo Bot Telegram quản lý tài chính với Google Sheet", category: "Nothing", filenName: "bot-telegram"),
-        PostMeta(id: "4", title: "Chặn quảng cáo Web, App, Zalo bằng NextDNS", category: "Thủ thuật IOS", filenName: "nextdns"),
-        PostMeta(id: "5", title: "Cài Lịch Âm & Bộ gõ tiếng Việt trên macOS, các ứng dụng khác", category: "Thủ thuật Mac", filenName: "mac-apps"),
-        PostMeta(id: "6", title: "Tổng hợp tài liệu học lập trình và công nghệ thông tin từ Freetuts", category: "Tài liệu học tập", filenName: "tong-hop-tai-lieu-freetuts"),
-        PostMeta(id: "7", title: "Tổng hợp các nhóm crack mod hack - apk,ipa(android/ios) trên Telegram", category: "Phần mềm/Ứng dụng", filenName: "group-telegram"),
-        PostMeta(id: "8", title: "Tổng hợp các trang web chia sẻ tài nguyên ứng dụng trên Mac", category: "Thủ thuật Mac", filenName: "mac-webs")
+        PostMeta(id: "1", title: "Contact me", category: "Nothing", fileName: "contact"),
+        PostMeta(id: "2", title: "Cách dùng các công cụ AI hiệu quả như một chuyên gia", category: "Nothing", fileName: "guide-use-ai"),
+        PostMeta(id: "3", title: "Tạo Bot Telegram quản lý tài chính với Google Sheet", category: "Nothing", fileName: "bot-telegram"),
+        PostMeta(id: "4", title: "Chặn quảng cáo Web, App, Zalo bằng NextDNS", category: "Thủ thuật IOS", fileName: "nextdns"),
+        PostMeta(id: "5", title: "Cài Lịch Âm & Bộ gõ tiếng Việt trên macOS, các ứng dụng khác", category: "Thủ thuật Mac", fileName: "mac-apps"),
+        PostMeta(id: "6", title: "Tổng hợp tài liệu học lập trình và công nghệ thông tin từ Freetuts", category: "Tài liệu học tập", fileName: "tong-hop-tai-lieu-freetuts"),
+        PostMeta(id: "7", title: "Tổng hợp các nhóm crack mod hack - apk,ipa(android/ios) trên Telegram", category: "Phần mềm/Ứng dụng", fileName: "group-telegram"),
+        PostMeta(id: "8", title: "Tổng hợp các trang web chia sẻ tài nguyên ứng dụng trên Mac", category: "Thủ thuật Mac", fileName: "mac-webs")
     ]
 }

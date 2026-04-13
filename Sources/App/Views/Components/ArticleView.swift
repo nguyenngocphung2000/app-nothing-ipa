@@ -36,15 +36,15 @@ struct ArticleView: View {
     }
     
     private func loadContent() {
-        if let filepath = Bundle.main.path(forResource: post.filenName, ofType: "md", inDirectory: "posts") {
+        if let filepath = Bundle.main.path(forResource: post.fileName, ofType: "md", inDirectory: "posts") {
             do {
                 let contents = try String(contentsOfFile: filepath)
                 self.markdownText = LocalizedStringKey(contents)
             } catch {
-                self.markdownText = "Lỗi khi tải file \(post.filenName).md: \(error.localizedDescription)"
+                self.markdownText = "Lỗi khi tải file \(post.fileName).md: \(error.localizedDescription)"
             }
         } else {
-            self.markdownText = "Không tìm thấy file: \(post.filenName).md trong Resources/posts"
+            self.markdownText = "Không tìm thấy file: \(post.fileName).md trong Resources/posts"
         }
     }
 }

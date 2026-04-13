@@ -12,6 +12,9 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: Sources/App
+      - path: Sources/App/Resources/posts
+        buildPhase: resources
+        type: folder
     info:
       path: Sources/App/Info.plist
       properties:
