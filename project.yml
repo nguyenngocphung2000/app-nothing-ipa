@@ -1,0 +1,37 @@
+name: NOTHING
+options:
+  bundleIdPrefix: com.nothing
+  defaultConfig: Release
+  deploymentTarget:
+    iOS: "16.0"
+
+targets:
+  NOTHING:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/App
+    info:
+      path: Sources/App/Info.plist
+      properties:
+        CFBundleShortVersionString: "26.4.13"
+        CFBundleVersion: "1"
+        UILaunchStoryboardName: LaunchScreen
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations: {}
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        DEVELOPMENT_TEAM: "" # For unsigned build
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_STYLE: Manual
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
