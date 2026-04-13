@@ -190,6 +190,7 @@ struct HomeView: View {
         case "wheel": WheelView()
         case "htmlrunner": HTMLRunnerView()
         case "imagetosvg": ImageToSVGView()
+        case "j2me": J2MEEmulatorView()
         default: Text("Coming Soon")
         }
     }

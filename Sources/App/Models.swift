@@ -25,7 +25,8 @@ class AppData {
         AppTool(id: "babyname", name: "Tên Cho Bé", desc: "Phân tích ngũ hành tương sinh", iconColor: .pink, bgOpacity: 0.1, index: 5),
         AppTool(id: "wheel", name: "Vòng Quay", desc: "Lựa chọn số phận ngẫu nhiên", iconColor: .indigo, bgOpacity: 0.1, index: 6),
         AppTool(id: "htmlrunner", name: "Chạy HTML", desc: "Sandbox Code Studio Mini", iconColor: .cyan, bgOpacity: 0.1, index: 7),
-        AppTool(id: "imagetosvg", name: "Ảnh Vector", desc: "Khử nhiễu & cắt SVG Native", iconColor: .green, bgOpacity: 0.1, index: 8)
+        AppTool(id: "imagetosvg", name: "Ảnh Vector", desc: "Khử nhiễu & cắt SVG Native", iconColor: .green, bgOpacity: 0.1, index: 8),
+        AppTool(id: "j2me", name: "Game Java Mobile", desc: "Giả lập phím Nokia (.jar)", iconColor: .orange, bgOpacity: 0.1, index: 9)
     ]
     
     static let manifest: [PostMeta] = [
